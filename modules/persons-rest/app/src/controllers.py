@@ -25,12 +25,3 @@ class PersonsResource(Resource):
     def get(self) -> List[Person]:
         persons: List[Person] = PersonService.retrieve_all()
         return persons
-
-
-@api.route("/persons/<person_id>")
-@api.param("person_id", "Unique ID for a given Person", _in="query")
-class PersonResource(Resource):
-    @responds(schema=PersonSchema)
-    def get(self, person_id) -> Person:
-        person: Person = PersonService.retrieve(person_id)
-        return person

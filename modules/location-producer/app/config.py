@@ -1,12 +1,17 @@
 import os
 from typing import List, Type
 
+# DB_USER = os.environ["DB_USERNAME"]
+# DB_PASS = os.environ["DB_PASSWORD"]
+# DB_HOST = os.environ["DB_HOST"]
+# DB_PORT = os.environ["DB_PORT"]
+# DB_NAME = os.environ["DB_NAME"]
 
-DB_USER = os.environ["DB_USERNAME"]
-DB_PASS = os.environ["DB_PASSWORD"]
-DB_HOST = os.environ["DB_HOST"]
-DB_PORT = os.environ["DB_PORT"]
-DB_NAME = os.environ["DB_NAME"]
+DB_USER = "ct_admin"
+DB_NAME = "geoconnections"
+DB_HOST = "localhost"
+DB_PORT = "5432"
+DB_PASS = "wowimsosecure"
 
 
 class BaseConfig:
@@ -30,8 +35,7 @@ class TestingConfig(BaseConfig):
 class DevelopmentConfig(BaseConfig):
     CONFIG_NAME = "dev"
     SECRET_KEY = os.getenv(
-        "DEV_SECRET_KEY",
-        "You can't see California without Marlon Widgeto's eyes"
+        "DEV_SECRET_KEY", "You can't see California without Marlon Widgeto's eyes"
     )
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -57,5 +61,6 @@ EXPORT_CONFIGS: List[Type[BaseConfig]] = [
     TestingConfig,
     ProductionConfig,
 ]
+
 
 config_by_name = {cfg.CONFIG_NAME: cfg for cfg in EXPORT_CONFIGS}

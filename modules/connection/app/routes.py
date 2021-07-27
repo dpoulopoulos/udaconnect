@@ -1,5 +1,5 @@
 def register_routes(api, root="api"):
-    from app.src import register_routes
+    from app.src import register_routes as register_connection
 
     # Add routes
-    register_routes(api)
+    register_connection(api)

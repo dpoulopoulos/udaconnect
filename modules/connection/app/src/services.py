@@ -1,9 +1,15 @@
+import os
 import logging
 
 from typing import Dict, List
 from datetime import datetime, timedelta
 
+import grpc
+
 from sqlalchemy.sql import text
+
+import app.src.person_pb2 as person_pb2
+import app.src.person_pb2_grpc as person_pb2_grpc
 
 from app import db
 from app.src.models import Connection, Location, Person
@@ -11,6 +17,9 @@ from app.src.models import Connection, Location, Person
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger("connection-api")
+
+
+# PERSON_SERVICE_URL = os.environ["PERSON_SERVICE_URL"]
 
 
 class ConnectionService:
@@ -80,3 +89,23 @@ class ConnectionService:
                 )
 
         return result
+
+class PersonService:
+    @staticmethod
+    def retrieve_all() -> List[Person]:
+        persons = []
+
+        channel = grpc.insecure_channel("localhost:5005")
+        stub = person_pb2_grpc.PersonServiceStub(channel)
+
+        response = stub.Get(person_pb2.Empty())
+        
+        for p in response.persons:
+            person = Person()
+            person.id = p.id
+            person.first_name = p.first_name
+            person.last_name = p.last_name
+            person.company_name = p.company_name
+            persons.append(person)
+
+        return persons
