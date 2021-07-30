@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger("connection-api")
 
 
-# PERSON_SERVICE_URL = os.environ["PERSON_SERVICE_URL"]
+PERSONS_GRPC_URL = os.environ.get("PERSONS_GRPC_URL", "localhost:30003")
 
 
 class ConnectionService:
@@ -40,7 +40,8 @@ class ConnectionService:
         ).all()
 
         # Cache all users in memory for quick lookup
-        person_map: Dict[str, Person] = {person.id: person for person in PersonService.retrieve_all()}
+        person_map: Dict[str, Person] = {
+            person.id: person for person in PersonService.retrieve_all()}
 
         # Prepare arguments for queries
         data = []
@@ -95,7 +96,7 @@ class PersonService:
     def retrieve_all() -> List[Person]:
         persons = []
 
-        channel = grpc.insecure_channel("localhost:5005")
+        channel = grpc.insecure_channel(PERSONS_GRPC_URL)
         stub = person_pb2_grpc.PersonServiceStub(channel)
 
         response = stub.Get(person_pb2.Empty())

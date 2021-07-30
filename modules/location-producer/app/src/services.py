@@ -13,11 +13,8 @@ from app.src.models import Location
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger("udaconnect-api")
 
-# KAFKA_URL = os.environ["KAFKA_URL"]
-# KAFKA_TOPIC = os.environ["KAFKA_TOPIC"]
-
-KAFKA_URL = "localhost:9092"
-KAFKA_TOPIC = "location"
+KAFKA_URL = os.environ["KAFKA_URL"]
+KAFKA_TOPIC = os.environ["KAFKA_TOPIC"]
 
 producer = KafkaProducer(bootstrap_servers=KAFKA_URL)
 

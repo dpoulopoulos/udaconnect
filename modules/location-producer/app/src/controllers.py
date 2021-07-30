@@ -17,7 +17,6 @@ api = Namespace("UdaConnect", description="Connections via geolocation.")  # noq
 @api.param("location_id", "Unique ID for a given Location", _in="query")
 class LocationResource(Resource):
     @accepts(schema=LocationSchema)
-    @responds(schema=LocationSchema)
     def post(self) -> Location:
         request.get_json()
         LocationService.create(request.get_json())
