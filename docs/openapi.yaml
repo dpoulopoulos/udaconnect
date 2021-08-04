@@ -19,7 +19,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Person'
+                  $ref: '#/components/schemas/PersonResponse'
         "400":
           description: Bad input parameter
     post:
@@ -31,7 +31,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PersonId'
+              $ref: '#/components/schemas/Person'
       responses:
         "200":
           description: Successfully created a new Person
@@ -41,7 +41,7 @@ paths:
                 $ref: '#/components/schemas/Person'
         "400":
           description: Bad input parameter
-  /api/persons/{personId}/connection:
+  /api/persons/{person_id}/connection:
     get:
       summary: Gets the connections of a specific Person
       description: |
@@ -55,18 +55,18 @@ paths:
         schema:
           type: string
       - in: query
-        description: End date range
-        name: endDate
-        required: True
-        schema:
-          type: string
-      - in: query
         description: Start date range
         name: startDate
         required: True
         schema:
           type: string
-      - name: personId
+      - in: query
+        description: End date range
+        name: endDate
+        required: True
+        schema:
+          type: string
+      - name: person_id
         in: path
         description: The Person's ID
         required: true
@@ -83,14 +83,54 @@ paths:
                   $ref: '#/components/schemas/Connection'
         "400":
           description: Bad input parameter
+  /api/locations/{location_id}:
+    get:
+      summary: Gets a specific location by its ID
+      description: |
+        Retrieves all the details of a specific location
+      operationId: getLocation
+      parameters:
+      - name: location_id
+        in: path
+        description: The Locations's ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successfully retrieved the location specified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationResponse'
+        "400":
+          description: Bad input parameter
+        "404":
+          description: The specified location ID was not found in the database
+  /api/locations/:
+    post:
+      summary: Creates a new Location record in the database
+      description: |
+        Create a new location record in the database with specific attributes
+      operationId: createLocation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+      responses:
+        "202":
+          description: The request was accepted
+        "400":
+          description: Bad input parameter 
 components:
   schemas:
-    Person:
+    PersonResponse:
       required:
-      - company_name
-      - first_name
       - id
+      - first_name
       - last_name
+      - company_name
       type: object
       properties:
         id:
@@ -98,29 +138,29 @@ components:
           example: 1
         first_name:
           type: string
-          example: Dimitris
+          example: "Dimitris"
         last_name:
           type: string
-          example: Poulopoulos
+          example: "Poulopoulos"
         company_name:
           type: string
-          example: Dimpo
-    PersonId:
+          example: "Dimpo"
+    Person:
       required:
-      - company_name
       - first_name
       - last_name
+      - company_name
       type: object
       properties:
         first_name:
           type: string
-          example: Dimitris
+          example: "Dimitris"
         last_name:
           type: string
-          example: Poulopoulos
+          example: "Poulopoulos"
         company_name:
           type: string
-          example: Dimpo
+          example: "Dimpo"
     Connection:
       required:
       - person
@@ -129,14 +169,56 @@ components:
       properties:
         person:
           type: object
-          example: {"id": "1",
-                    "first_name": "Dimitris",
-                    "last_name": "Poulopoulos",
-                    "company_name": "Dimpo"}
+          example:
+          - id: 6
+            first_name: "Dimitris"
+            last_name: "Poulopoulos"
+            company_name: "Dimpo"
         location:
           type: object
-          example: {"latitude": "-122.290883",
-                    "id": 30,
-                    "creation_time": "2020-08-15T10:37:06",
-                    "person_id": 5,
-                    "longitude": "37.55363"}
+          example:
+          - id: 30
+            person_id: 5
+            longitude: 37.55363
+            latitude: -122.290883
+            creation_time: "2020-08-15T10:37:06"
+    Location:
+      required:
+      - person_id
+      - longitude
+      - latitude
+      type: object
+      properties:
+        person_id:
+          type: integer
+          example: 1
+        longitude:
+          type: string
+          example: "100"
+        latitude:
+          type: string
+          example: "-220"
+    LocationResponse:
+      required:
+      - id
+      - person_id
+      - longitude
+      - latitude
+      - creation_time
+      type: object
+      properties:
+        id:
+          type: integer 
+          example: 1
+        person_id:
+          type: integer
+          example: 6
+        longitude:
+          type: string
+          example: "100"
+        latitude:
+          type: string
+          example: "-220"
+        creation_time:
+          type: string
+          example: "2020-08-15T10:37:06"
