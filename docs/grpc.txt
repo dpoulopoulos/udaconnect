@@ -1,0 +1,6 @@
+# The gRPC service for the Person endpoint.
+
+The request has a payload with `first_name`, `last_name` and `company_name`.
+
+To make a sample request, use the simple template inside
+modules/persons-grpc/app/test.py
